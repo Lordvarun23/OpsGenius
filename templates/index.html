@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    {%metas%}
+    {%css%}
+    {%scripts%}
+    <script>
+        function downloadReport() {
+            fetch('/api/generate-html')
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'dashboard_report.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(() => alert('Failed to download report'));
+        }
+    </script>
+</head>
+<body>
+    {%app_entry%}
+    <button onclick="downloadReport()" id="download-button">Download Report</button>
+    <footer>
+        {%config%}
+        {%renderer%}
+    </footer>
+</body>
+</html>
